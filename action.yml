@@ -18,10 +18,6 @@ runs:
       run: bash gradlew assembleRelease
       shell: bash
 
-    - name: Build release bundle
-      run: bash gradlew bundleRelease
-      shell: bash
-
     - name: Get tag
       id: tag
       run: |
@@ -37,26 +33,6 @@ runs:
       with:
         tag_name: build-${{ steps.tag.outputs.tag }}
         release_name: Build ${{ steps.tag.outputs.tag }}
-
-    - name: Upload unsigned release APK
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./app/build/outputs/apk/release/app-release-unsigned.apk
-        asset_name: app-release-unsigned.apk
-        asset_content_type: application/apk
-
-    - name: Upload release bundle
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ inputs.token }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./app/build/outputs/bundle/release/app-release.aab
-        asset_name: app-release.aab
-        asset_content_type: application/aab
 
     - name: Fetch public keystore
       run: wget https://github.com/tytydraco/public-keystore/raw/main/public.jks
